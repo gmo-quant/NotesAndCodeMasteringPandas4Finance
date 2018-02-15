@@ -46,3 +46,54 @@ s3 = pd.Series( { 'a':1, 'b': 2, 'c': 3, 'd':4, 'e': 5} );
 #
 s4 = pd.Series(np.random.randn(5));     
 s4.index = ['k', 'k', 'j', 'm','n'];    
+
+
+#SIZE, SHAPE, UNIQUESS, COUNTS OF VALUES
+# s = pd.Series([c, np.nan]);
+# len(s)
+# s.shape
+# s.count() + 1 = len(s)
+# s.value_counts()
+# s.unique()
+
+# ALIGNMENT  VIA INDEX LABELS
+# NumPy ndarray : operate elements on the same position
+# Series: operate elements with same Index labels
+
+
+#CREATING A DataFrame
+# think of spreadsheet/ database table/ n-dimension array
+
+# create a DataFrame from a 2-d Numpy array
+df = pd.DataFrame(np.array( [  [10, 11], [20, 21]  ] ));
+
+# initialize by passing a list of Seriers objects
+
+df1 = pd.DataFrame(
+            [
+                    pd.Series(np.arange(10, 15)),
+                    pd.Series(np.arange(15, 20))
+            ]
+        );
+
+
+# shape of a DataFrame
+# df1.shape
+
+# column names
+df2 = pd.DataFrame(  np.array( [ [3,5],[8,5] ]), columns = ['a', 'b']        );
+df2.columns = ['c','d'];
+
+# row names
+df2.index = ['r1', 'r2']
+
+
+# vertically definition/ horizontal definition, 
+# if there are index label for each series, 
+# elements will be align automatically
+s5 = pd.Series(np.arange(1, 6, 1));
+s5.index = ['a', 'b', 'c', 'k', 'j'];
+s6 = pd.Series(np.arange(6,11, 1));
+s6.index = ['d', 'e', 'f', 'g', 'h']
+df3 = pd.DataFrame( {  'c1' : s5, 'c2' : s6 } );
+df4 = pd.DataFrame( [s5, s6]);

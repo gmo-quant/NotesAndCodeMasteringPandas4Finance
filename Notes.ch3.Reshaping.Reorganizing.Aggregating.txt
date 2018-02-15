@@ -1,0 +1,168 @@
+Reshaping, Reorganizing, Aggregating
+overview
+{
+    locaing historical data from the Web or from files
+    concatenating and merging stock price data along multiple axes
+    merging data in multiple DataFrame objects.
+    Pivoting stock price data between axes
+    Stacking, unstacking, and melting of stock data
+    Spliting and grouping stock data to be able to calcualte aggregate results
+
+}
+
+loading historical stock data
+{
+    import pandas as pd
+    import numpy as np
+    import datetime
+    import matplotlib.pyplot as plt
+
+    pd.set_option('display.notebook_repr_html', False);
+    pd.set_option('display.max_columns', 15)
+    pd.set_option('display.max_rows', 8)
+    pd.set_option('precision', 3)
+
+
+    import pandas_datareader as web
+
+    # generally, 
+    # firstly, determine the time period of histrical data
+    #           defining by start and end date
+    # 
+    # secondly, determine the data src
+    # 
+    # thirdly, fetch data from the src 
+    #          and assign to a varible for further process
+    #
+    start = datetime.datetime(2012, 1, 1);
+    end = datetime.datetime(2012, 12, 30);
+    src = 'google'
+    msft = web.DataReader("MSFT", src, start, end);
+    aapl = web.DataReader("AAPL", src, start, end);
+    
+    # it is an option to save the data to file
+    msft.to_csv("msft.csv");
+    aapl.to_csv("aapl.csv");
+    
+    # it is an option to read data from the file
+    msft = pd.read_csv("msft.csv", index_col = 0, parse_dates=True)
+    aapl = pd.read_csv("aapl.csv", index_col = 0, parse_dates=True)
+}
+
+reorganizing and reshaping data
+{
+    When working with financial information, 
+    it is often the case that data retrieved
+    from almost any data source 
+    will not be in the format 
+    that you need to perform the
+    analyses that you want
+
+    concatenating multiple DataFrame objects
+    {
+        it is a process of creating a new pandas object
+        by combining data from two (or more pandas) objects into 
+        a new pandas object along a single specified axis of 
+        the two objects.
+
+        * combine values taken at different time periods,
+        * create additional columns representing 
+            other measurements at a particular 
+            date and time for a specific stock, 
+        * add a column for the same measurement of a different stock 
+            but for the same time period.
+
+        DataFrame objects are concatenated by pandas along a specified axis
+        the two axes being the index labels of the rows and the columns
+
+        this is done by first extracting the labels from 
+        both the DataFrame object indices along the specified axis,
+        using that set as the index of the new DataFrame,
+        then copying the values along the other axis 
+        into the result in an orderly manner,
+        that is, from the first DataFrame and then the second.
+
+        the result of a concatenation always 
+        contains the union of the number of items 
+        in both objects along the specific axis.
+
+        # 
+        # the resulting DataFrame contains an index 
+        # identical in structure to both of the objects
+        # with labels from the first object
+        # and then the second object copied into
+        # the new object
+        # 
+        msftA01 = msft['2012-01']['Close']
+        msftA02 = msft['2012-02']['Close']
+        pd.concat ( [msftA01[:3], msftA02[:3]])
+        or
+        pd.concat ( [msftA01.head(3), msftA02.head(3)])
+
+
+        # during a concatenation along the row axis, 
+        # pandas will not align the index labels
+        # they will be copied and this can create duplicated,
+        # identical index labels:
+
+        aaplA01 = aapl['2012-01'] [ ['Close'] ]
+        withDups = pd.concat ( [msftA01[:3], aaplA01[:3]])
+
+        # add an additional level to the index
+        # (making a multiindex), which can be used
+        # to identify the source DataFrame
+        closes = pd.concat( [msftA01[:3], aaplA01[:3]], keys = ['MSFT', 'AAPL']);
+        closes.ix['MSFT'][:3]
+
+        # concatenation along the row axis can also be performed 
+        # using DataFrame objects with multiple columns
+        msftAV = msft[ ['Close', 'Volume'] ]
+        aaplAV = msft[ ['Close', 'Volume'] ]
+        cma = pd.concat( [msftAV, aaplAV]);
+
+        # the columns in the DataFrame objects in a concatenation
+        # do not have to have the same names.
+
+        the set of columns that results from a concatenation 
+        along the row axis is the result of relational algebra
+        across the name of the columns.
+
+        we can change the axis for concatenation to the columns using
+        axis =  1
+
+        msftA = msft[['Close']].rename( columns = {"Close": "msft"})
+        closes_col = pd.concat( [msftA, aaplA], axis = 1)
+
+        msftA1 = msft[['Close', 'Volume']]
+        aaplA1 = aapl[['Close', 'Volume']]
+        close = pd.concat( [msftA1, aaplA1], axis = 1, keys = ['MSFT', 'AAPL']);
+
+        pd.concat([msftA[:3], aaplA[:3]], ignore_index=True)
+    }
+
+    merging DataFrame objects
+    {
+        Merging in pandas differs from concatenation in that the pd.merge() function
+        combines data based on the values of the data in one or more columns 
+        instead of using the index label values along a specific axis
+
+        msftAR = msftA.reset_index()
+        msftVR = msft[['Volume']].reset_index()
+        msftCVR = pd.merge(msftAR, msftVR)
+        # the column in common is Date
+
+        The types of joins supported by pd.merge() 
+        are similar to the different types of joins
+        supported in relational databases.
+        {
+            • left: Use keys from the left DataFrame 
+                    (equivalent to SQL's left-outer join)
+            • right: Use keys from the right DataFrame 
+                    (equivalent to SQL's right-outerjoin)
+            • outer: Use the union of keys from both DataFrame objects 
+                    (equivalent to  SQL's full outer join)
+            • inner: Use the intersection of keys from both DataFrame objects 
+                    (equivalent to SQL's inner join)
+        }
+    }
+}

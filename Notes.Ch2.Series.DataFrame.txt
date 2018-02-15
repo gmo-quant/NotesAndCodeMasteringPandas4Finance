@@ -1,0 +1,303 @@
+Ch2. introducing the Series and DataFrame
+
+overview
+{
+	creating and accessing elements of a Series
+	Determining the shapes and counts of items in a Series
+	Alignment of items in a Series via index labels
+	creating a DataFrames
+	loading financial data to DataFrame
+	selecting rows of a DataFrame using its index
+	boolean selection of rows of a DataFrame using logical expressions.
+	perfroming arithmetic on a DataFrame.
+	Reindexing the Series and DataFrame objects.
+}
+
+Series
+{	
+	a building block of pandas. 
+	the basis for data representation and manipulation in pandas.
+	represents a one-dimensional labeled array
+
+	it is based on the Numpy ndarray.
+
+	creating a Series and accessing elements
+	{
+		creating a Series
+		{
+			np.random.seed(1)
+			# creat a Series
+			s = pd.Series(np.random.randn(100)) 
+
+			# create a Series by directly initialized from a Python dictionary.
+			# key used as labels
+			s3 = pd.Series({'a': 1, 'b':2, 'c':3, 'd':4})
+		}
+		
+		accessing elements
+		{
+			# retrive an individual element using the [] operator
+			# s[index_label]
+			s[2]
+
+			# retrive multiple values by using an array of label values
+			s[ [2, 5, 20] ]
+
+			# slicing using the : slice notation.
+			s[3:8]
+
+			# retrieve index using the .index property
+			s.index
+
+			# retrieve all values using the .values property
+			s.values
+
+			# default index labels will be assign as sequential integer values 
+			# starting at 0.
+			# to specify non-default index labels, 
+			# use the index parameters of the Series object constructor
+			# or 
+			# assign them using the .index property after  creation.
+
+			s2 = pd.Series( [1, 2, 3, 4], index = ['a', 'b', 'c', 'd'])
+
+			s.head()
+			s.tail()
+		}
+	}
+
+	size, shape, uniqueness, and counts of values
+	{
+		s = pd.Series([10, 0, 1, 3, 4, np.nan])
+		len(s)
+
+		# .shape property (len, )
+		s.shape
+
+		# # of rows that do not have a value of NaN 
+		s.count()
+
+		# determine all of the unique values in a Series
+		s.unique()
+
+		# count of each of the unique items in a Series
+		#s.value_counts()
+	}
+	Alignment via index labels
+	{
+		automatic data alignment based upon label values, 
+		means before performing an operation on the Series, 
+		pandas will align the data upon label values, 
+		that is, value at label 'a' of Series A, 
+		will be operated with value at label 'a' of Series B. 
+		regardless what the order in each Series is.  
+		but when using np.array, it will perform operation 
+		upon the index order, without alignment adjustment.
+	}
+}
+DataFrame
+{
+	manage multiple Series,
+	each of the Series represents a column of the DataFrame. 
+	automatically aligning values in each column along the index labels of the DataFrame
+	automatic alignment of Series data by index labels
+
+	think of DataFrame as a spreadsheet or a relational database table
+	can be thought of as a dictionary-like container of one or more Series objects,
+
+	it unifies two or more Series into a single data structure. 
+	it provides a single  index 
+	and 
+	the data in all columns is aligned to the master index of the DataFrame
+	each index label then references a slice of data across all of the Series at the label 
+
+	concepts of axis
+	{
+		functions from pandas can applied to either axis,
+		in essence, stating that it applies either 
+		to all the values in selected rows 
+		or 
+		to all the values in specific columns
+
+		horizontal
+		{
+			row
+		}
+		vertical
+		{
+			column
+		}
+	}
+
+	creating a DataFrame
+	{
+		df = pd.DataFrame(np.array([ [10, 11],[20, 12]]))
+		df1	= pd.DataFrame([ 	pd.Series(np.arange(10, 15)), 
+								pd.Series(np.arange(15, 20))])
+
+		# the dimensions of a DataFrame can be determined using its .shape proterty
+		# a DataFrame is always two-dimensional
+		df.shape
+
+		# column names can be specified at the time of creating
+		df2 = pd.DataFrame(np.array( [ [10, 11], [20,21]]), columns = ['a', 'b'])
+		df2.columns
+
+		# the names of the columns can be changed by assigning the .columns property 
+		# with a list of new names:
+		df2.columns = ['c1', 'c2']
+
+		# likewise, the index labels can be assigned using the index parameter of the constructor
+		# or by assigning a list directly to the .index property.
+		df3 = pd.DataFrame(np.array([[0, 1], [2, 3]]), columns=['c1','c2'], index=['r1', 'r2'])
+		df3.index
+		df3.values
+
+		# A DataFrame can also be created by passing a dictionary 
+		# containing one or more Series objects.
+		# a DataFrame also does automatic alignment for each Series passed in 
+		# by a dictionary
+		s1 = pd.Series(np.arange(1, 6, 1))
+		s2 = pd.Series(np.arange(1, 121, 1))
+		s3 = pd.Series(np.arange(12, 14), index=[1, 2])
+		df4 = pd.DataFrame({'c1': s1, 'c2': s2, 'c3':s3})
+
+		# read from file
+		sp500 = pd.read_csv("sp500.csv", index_col='Symbol', usecols=[0, 2, 3, 7])
+		sp500.index
+	}
+	selecting columns of a DataFrame
+	{
+		# using the [] operator to select the data in specific columns of a DataFrame
+		# this can be passed either a single object of a list of objects,
+		# these objects are then used to look up columns either by the zero-based location
+		# or by matching objects to the values in the columns index
+		
+		sp500[[1,2]].head(3)
+		sp500['Price']
+		sp500[1]
+
+		# multiple columns can be selected by name by passing a list of the column names 
+		# and results in a DataFrame
+		sp500[ ['Price', 'Sector']]
+
+		# columns can also be retrieved using what is referred to as attribute access.
+		# each column in a DataFrame dynamically adds a property to the DataFrame for 
+		# each column where the name of the property is the name of the column
+		sp500.Price
+	}
+	selecting rows of a DataFrame using the index
+	{
+		row selection using index on a DataFrame breaks down into the following 
+		general categories of operations:
+		* slicing using the [] operator
+		* label- or location-based lookup using .loc, .iloc, and .ix
+		* scalar lookup by label or location using .at and .iat
+		all of these are working against the content of the index of the DataFrame. 
+		there is no involvement of data in the columns when selecting rows. 
+
+		# slicing using the [] operator // not recommended
+		sp500[:3]
+		sp500['index label' : 'index label2']
+		sp500.Price[0:3]
+
+		#label- or location-based lookup using .loc, .iloc, and .ix
+		# retrieve via the index label  uisng .loc[]
+		sp500.loc['MMM']
+		sp500.loc[['MMM', 'MSFT']]
+		sp500.loc['MMM'][['Price', 'Sector']]
+
+		# retrieve via the location using .iloc[]
+		sp500.iloc[[0,2]]
+
+		i1 = sp500.index.get_loc('MMM')
+		i2 = sp500.index.get_loc('A')
+		sp500.iloc[ [i1, i2]]
+
+		# selecting rows by the index label and/or location -.ix[]
+		sp500.ix[['MSFT', 'ZTS']]
+		# the location-based lookup can be performed by passing a list of integers
+		sp500.ix[[10,200,450]]
+
+		the use of .loc and .iloc are recommended over other methods, and has higher performance
+
+		scalar lookup yb label or location using .at[] and .iat[]
+
+		# scalar values can be looked up by label using .at[] by passing the row label 
+		# and then the column name/value:
+		sp500.at['MMM', 'Price'] # df.at[row_label, col_label]
+		sp500.iat[0, 1] # df.iat[row_loc, col_loc]
+
+		selecting rows using the boolean selection
+		{
+			sp500.Price < 100 # return true / false array
+			sp500[ sp500.Price < 100]
+			# multiple conditions cna be put together using parentheses, 
+			# and at the same time, it is possible to select only 
+			# a sub set of th columns
+			sp500[ (sp500.Price <10) & (sp500.Price) >0] [['Price']]
+		}	
+	}
+
+	Arithmetic on a DataFrame
+	{
+		Arithmetic operations using scalar values will be applied to every element of a DataFrame.
+		np.random.see(12345)
+		df = pd.DataFrame(np.random.randn(5,4), columns=['A', 'B', 'C', 'D'])
+		df * 2
+
+		when performing an operation between a DataFrame and a Series, 
+		pandas will align the Series index along the DataFrame columns, 
+		performing what is referred to as a row-wise broadcast.
+		df - df.iloc[0]
+	}
+
+	Reindexing the Series and DataFrame objects
+	{
+		reindexing in pandas is a process that makes the data present in a Series or DataFrame
+		match with a given set of labels along a prticular axis. 
+		{
+			reorders existing data to match a set of labels
+			inserts NaN markers where no data exisits for a label
+			fills missing data for a label using a type of logic (defaulting to adding NaNs)
+
+			reindexing a Series
+			{
+				np.random.seed(1)
+				s = pd.Series(np.random.randn(5))
+				s.index = ['a', 'b', 'c', 'd', 'e']
+
+				# .reindex() , it actually work as selecting rows.
+				# the result is a new Series with the labels provided as a parameter, and if the existing Series had a matching label, that value is copied to the new Series.
+				# if there is an index label created for which the Series did not have an already existing label, the value will be assigned NaN.
+				s2  = s.reindex( ['a', 'c', 'e', 'g'])
+
+				s1 = pd.Series([0,1,2], index = [0,1,2])
+				s2 = pd.Series([3,4,5], index = ['1', '2', '3'])
+				s3 = pd.Series([3,4,5], index = ['a', 'b', 'c'])
+
+				s2 + s1 
+
+				s2.index = s2.index.values.astype(int)
+
+				s5 = s.copy()
+				s2.reindex(['a', 'f'], fill_value = 0)
+
+				# interpolation and filling of values
+				s3 = pd.Series(['red', 'green', 'blue'], index =[0,3,5])
+
+				# forward filling 
+				# backward filling
+				s3.reindex(np.arange(0,7), method = 'ffill')
+
+
+			}
+		}
+	}
+}	
+
+
+
+
+
+

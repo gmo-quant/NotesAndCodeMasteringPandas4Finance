@@ -1,0 +1,121 @@
+model and solve real-world financial problems
+
+financial tasks
+{
+	option pricing,
+	algorithmic trading,
+	model financial information(specifically time-series data)
+	manipulate time-series data,
+	group and derive aggregate results,
+	calculate common financial measurements
+	{
+		such as 
+		percentage changes, 
+		correlation of time-series, 
+		various moving window operations,
+	}
+	key data visualizations for finance,
+	correlations of Google trends with stock movements,
+	algorithmic trading systems,
+	calculate options payoffs, prices, and behaviors,
+	model portfolios and their risk 
+	optimize the portforlios for specific risk/return tolerances.
+}
+
+
+core pandas data structures
+{
+	Series,
+	DataFrame
+}
+
+over view
+{
+	group data
+	{
+		use grouped data to calculate simple risk measurements.
+	}
+	reshaping
+	{}
+	reorganizing
+	{}
+	aggregating
+	{
+		preform aggregate operations on grouped data to assist with deriving analytic results.
+	}
+	time-series,
+	time-series, stock data
+	{
+		retrieve and perform various financial calculations using historical stock quotes obtained from Google/Yahoo!
+
+		retrieve quotes,
+		perform various calculateions
+		{
+			percentage change,
+			cumulative returns,
+			moving averages,
+			volatility,
+		}
+		analysis techniques
+		{
+			return distribution,
+			correlation,
+			least squares analysis.
+		}
+	}
+
+	trading using google trend
+	{
+		form correlations between index dta and trends in searches on Google.
+		{}
+		gather index data from Quandl along with trend data from Google
+		{}
+		correlate time-series data and use that information to generate trade signals
+		{}
+		calculate the effectiveness of the trading strategy as compared to the actual market performance.
+		{}
+	}
+
+	Algorithmic Trading
+	{
+		trading strategies
+		{
+			simple moving averages,
+			exponentially weighted averages,
+			crossovers,
+			pairs-trading
+		}
+		back testing
+		{
+			Zipline, an open source back-testing tool, to simulate trading behavior on historical data.
+		}
+
+	}
+
+	working with options
+	{
+		model and evaluate options
+		{
+			what is options,
+			how they function,
+			how to calculate their payoffs,
+		}
+		load options data from Yahoo! Finance into pandas data structures 
+		examine various options attributes
+		{
+			implied volatility
+			volatility smiles and smirks
+		}
+	}
+
+	Portfolios and risk
+	{
+		model portfolios of multiple stocks.
+		Modern Portfolio Theory
+		calculate the risk and returns of a portfolio,
+		assign different weights to different instruments in a portfolio,
+		derive the Sharpe ratio,
+		calculate efficient frontiers and value at risk
+		optimize portfolio instrument allocation.
+	}
+}
