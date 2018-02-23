@@ -1,0 +1,90 @@
+automated trading algorithms
+zipline a python-based algorithmic trading library.
+It provides event-driven approximations of live-trading systems.
+
+
+transaction fees, commissions, and slippage
+
+Backtesting is the ability
+to run an algorithm on historical data to determine the effectiveness of the decisions made on actual market data.
+
+{
+    • The process of algorithmic trading
+    • Momentum and mean-reversion strategies
+    • Moving averages and their significance in automated decision making
+    • Simple and exponentially weighted moving averages
+    • Common algorithms used in algorithmic trading
+}
+
+
+the process of algorithmic trading
+{
+    Algorithmic trading is the use of an automated system to execute trades in a market
+
+    two broad categories for predicting movemnet in the market
+    {
+        momentum strategies
+        {
+            In momentum trading, 
+            trading focuses on stocks that are 
+            * moving in a specific direction on high volume, 
+            * measuring the rate of change in price changes.
+
+            It is typically 
+            measured by continuously computing 
+            price differences 
+            at fixed time intervals.
+
+            Momentum
+            {
+                a useful indicator of the strenth or weakness of the price
+                although 
+                it is typically more useful during rising markets 
+                as they occur more frequently than falling markets;
+                therefore, 
+                momentum-based prediction gives better results in a rising market.
+            } 
+        }
+        mean-reversion strategies
+        {
+            Mean reversion is a theory in trading that prices and returns will eventually move
+back towards the mean of the stock or of another historical average, such as the
+growth of the economy or an industry average. When the market price is below the
+average price, a stock is considered attractive for purchase as it is expected that the
+price will rise and, hence, a profit can be made by buying and holding the stock as it
+rises and then selling at its peak. If the current market price is above the mean, the
+expectation is the price will fall and there is potential for profit in shorting the stock.
+        }
+    }
+
+    moving averages strategies
+    {
+Whether using a momentum or mean-reversion strategy for trading, the analyses
+will, in one form or another, utilize moving averages of the closing price of stocks.
+We have seen these before when we looked at calculating a rolling mean. We will
+now examine several different forms of rolling means and cover several concepts
+that are important to use in order to make trading decisions based upon how one
+or more means move over time:
+• Simple moving average
+• Exponential moving average
+
+        simple moving average
+        {
+            A moving average is a technical analysis technique that smooths price data by
+calculating a constantly updated average price. This average is taken over a specific
+period of time, ranging from minutes, to days, weeks, and months. The period
+selected depends on the type of movement of interest, such as making a decision
+on short-term, medium-term, or long-term investment.
+Moving averages give us a means to relate the price data to determine a trend indicator.
+A moving average does not predict price direction but instead gives us a means of
+determining the direction of the price with a lag, which is the size of the window.
+In financial markets, a moving average can be considered support in a rising market
+and resistance in a falling market.
+        }
+
+        Exponential moving average
+        {
+
+        }
+    }
+}
